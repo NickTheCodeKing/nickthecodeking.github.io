@@ -1,156 +1,1760 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
-    <link rel="stylesheet" href="portfolio.css">
+    <meta charset="UTF-8" />
+    <title>Our Story ❤️</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+            color: #333;
+        }
+
+        /* Card Section */
+        #cards-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            animation: fadeIn 0.6s ease;
+        }
+
+        button {
+            margin-top: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 999px;
+            background: #ee9ca7;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        /* Timeline Section */
+        #timeline-section {
+            display: none;
+            width: 100%;
+        }
+
+        /* Keep your existing timeline styles as-is */
+        .timeline-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline-wrapper {
+            overflow-x: auto;
+            padding: 4rem 3rem;
+        }
+
+        .timeline {
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            gap: 6rem;
+            min-width: max-content;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e0e0e0;
+            border-radius: 1.5px;
+        }
+
+        .entry {
+            position: relative;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .entry::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 3rem;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+        .date {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #777;
+            margin-bottom: 1.75rem;
+        }
+
+        .thumb {
+            width: 300px;
+            height: 230px;
+            margin-bottom: 2rem;
+            border-radius: 14px;
+            object-fit: cover;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+            transition: transform 0.3s ease;
+            will-change: transform;
+        }
+
+        .entry:hover .thumb {
+            transform: scale(1.05);
+        }
+
+        /* Scrollbar */
+        .timeline-wrapper::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        .timeline-wrapper::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .timeline-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 999px;
+            border: 3px solid transparent;
+            background-clip: content-box;
+        }
+
+        .timeline-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.35);
+            background-clip: content-box;
+        }
+
+        .timeline-wrapper {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 9999;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            padding: 1.5rem;
+            animation: fadeIn 0.4s ease;
+            position: relative;
+            z-index: 10000;
+        }
+
+        .modal-content img {
+            width: 100%;
+            border-radius: 14px;
+            margin-bottom: 1rem;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            text-align: right;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #777;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Floating hearts background */
+        .hearts-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .hearts {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -40px;
+            font-size: 1.5rem;
+            opacity: 0.7;
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) scale(0.9);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translateY(-50vh) translateX(20px) scale(1.1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-120vh) translateX(-20px) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        .tile {
+            width: 260px;
+            height: 180px;
+            font-size: 1.3rem;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #fff;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tile:hover {
+            transform: scale(1.15);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Make sure real content stays above hearts */
+        #menu-section,
+
+        #menu-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            /* full viewport height */
+            text-align: center;
+            gap: 3rem;
+            /* space between the title and tiles */
+        }
+
+        #tiles-container {
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #cards-section,
+        #timeline-section {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes pulseForever {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container1">
-        <ul class="particles">
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-        </ul>
+    <audio id="bg-music" loop>
+        <source src="audio/Background_Music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <button id="music-toggle">Pause Music</button>
+
+    <div class="hearts-container" id="hearts"></div>
+
+    <!-- Card Section -->
+    <div id="cards-section">
+        <div id="card-container"></div>
     </div>
-    <div id="wrapper">
-        <!-- <div class="fixed-navbar">
-            <li> <a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact Me</a></li>
-        </div> -->
-        <div class="wrapper" id="header-wrapper">
-            <div class="header animate">
-                <div class="introduction">
-                    <h1>Hi, I'm <span>Nicholas</span></h1>
-                    <p>I'm a Computer Science Student</p>
-                </div>
-                <div class="nav animate">
-                    <ul class="animate">
-                        <li> <a href="#about">About</a></li>
-                        <li><a href="#skills">Skills</a></li>
-                        <li><a href="#projects">Projects</a></li>
-                        <li><a href="#contact">Contact Me</a></li>
-                    </ul>
-                </div>
+
+    <!-- Main Menu Section -->
+    <div id="menu-section" style="
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        min-height:100vh;
+        text-align:center;
+    ">
+        <h1 style="margin-bottom:3rem;">Our Story Hub</h1>
+        <div id="tiles-container" style="
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:center;
+            gap:3rem;
+        ">
+            <!-- Tiles get generated by JS -->
+        </div>
+    </div>
+
+    <!-- Timeline Section -->
+    <div id="timeline-section">
+        <div class="timeline-container">
+            <div class="timeline-wrapper">
+                <div class="timeline" id="timeline"></div>
             </div>
+        </div>
+    </div>
+
+    <!-- Messages Section -->
+    <div id="messages-section" style="display:none; min-height:100vh; text-align:center; position:relative;">
+        <h1>Messages 💌</h1>
+        <div id="message-threads-container"
+            style="display:flex; flex-wrap:wrap; justify-content:center; gap:2rem; margin-top:2rem;">
+            <!-- Thread tiles get generated by JS -->
         </div>
 
-        <div class="wrapper" id="about-wrapper">
-            <div class="about animate" id="about">
-                <div class="about-col-1">
-                    <img src="/Images/Professional_Picture.PNG" width="500px" heigth="500px">
-                </div>
-                <div class="about-col-2">
-                    <h1>About</h1>
-                    <p class="description"> As a 21-year-old college student, I'm currently in my junior year,
-                                            pursuing a degree in Computer Science. Knowledge holds immense value to me, 
-                                            and I have a deep-rooted passion for continuous learning. I thrive on seeking 
-                                            out new opportunities to expand my skill set and stay at the forefront of technological advancements.
-                                            <br><br>
-                                            I'm captivated by the art of media analysis. Whether it's diving into fictional books, comics, TV shows, or movies, 
-                                            I find joy in going beyond the surface. Uncovering the hidden themes and allegories that connect to real-life 
-                                            experiences is my passion.
-                                            <br><br>
-                                            I also have a competitive side that shines through my favorite pastime—Rocket League. This game has not only captivated 
-                                            my interest but also provided me with valuable lessons in perseverance, strategic thinking, and teamwork. Achieving a 
-                                            top 1% ranking among players has been a testament to my dedication and drive for excellence.
-                    </p>
-                </div>
+        <!-- Thread overlay -->
+        <div id="thread-overlay"
+            style="display:none; position:fixed; inset:0; background:#fff; z-index:10000; overflow-y:auto; padding:1rem;">
+            <button id="thread-back-btn"
+                style="padding:0.75rem 1.5rem; border:none; border-radius:999px; background:#ee9ca7; color:white; font-size:1rem; cursor:pointer; margin-bottom:1rem;">
+                ← Back
+            </button>
+            <div id="thread-content"
+                style="display:flex; flex-direction:column; gap:0.5rem; max-width:600px; margin:0 auto;"></div>
+            <div id="thread-input" style="
+                position: absolute;
+                bottom: 1rem;
+                left: 50%;
+                transform: translateX(-50%);
+                width: auto;
+                display: flex;
+                gap: 0.5rem;
+                background: transparent;
+            ">
+                <input type="text" placeholder="Type a message..." style="
+                        width: 500px;
+                        padding:0.4rem 0.8rem; 
+                        border-radius:20px; 
+                        border:1px solid #ccc; 
+                        font-size:0.9rem; 
+                        outline:none;
+                    " />
+                <button disabled style="
+                        padding:0.6rem 1.2rem; 
+                        border-radius:50px; 
+                        border:none; 
+                        background:#ccc; 
+                        color:#fff; 
+                        font-size:1rem; 
+                        cursor:not-allowed;
+                    ">
+                    Send
+                </button>
             </div>
         </div>
-        
-        <div class="wrapper" id="skills-wrapper">
-            <div class="skills animate" id="skills">
-                <h1>Skills</h1>
-                <ul class="option-titles">
-                    <li class="options active-option" onclick="opentab('back-end')">Back-End</li>
-                    <li class="options" onclick="opentab('front-end')">Front-End</li>
-                    <li class="options" onclick="opentab('tools-and-frameworks')">Tools/Frameworks</li>
-                </ul>
-                <ul class="option-contents active-tab" id="back-end">
-                    <li><img src="/Images/Java_Logo.png"></li>
-                    <li><img src="/Images/C_Logo.png"></li>
-                    <li><img src="/Images/Assembly_Language_Logo.png"></li>
-                    <li><img src="/Images/Python_Logo.png"></li>
-                    <li><img src="/Images/SQL_Logo.png"></li>
-                </ul>
-                <ul class="option-contents" id="front-end">
-                    <li><img src="/Images/HTML5_Logo.svg.png" id="html-logo"></li>
-                    <li><img src="/Images/CSS_Logo.png" id="css-logo"></li>
-                    <li><img src="/Images/JavaScript_Logo.png" id="javascript-logo"></li>
-                </ul>
-                <ul class="option-contents" id="tools-and-frameworks">
-                    <li><img src="/Images/Git_Logo.png" id="git-logo"></li>
-                    <li><img src="/Images/GitHub_Logo.png" id="github-logo"></li>
-                    <li><img src="/Images/VSCode_Logo.svg.png"></li>
-                </ul>
-            </div>
+    </div>
+
+    <!-- Calendar Section -->
+    <div id="calendar-section" style="display:none; min-height:100vh; text-align:center; padding:2rem;">
+        <h1>Calendar of Memories 📅</h1>
+
+        <div style="margin:1rem 0;">
+            <button id="prev-month">←</button>
+            <span style="margin:0 1rem; font-weight:600;">
+                <span id="calendar-month"></span>
+                <span id="calendar-year" style="cursor:pointer; text-decoration:underline;"></span>
+            </span>
+            <button id="next-month">→</button>
         </div>
-        
-        <div class="wrapper" id="projects-wrapper">
-            <div class="projects animate" id="projects">
-                <h1>Projects</h1>
-                <div class="projects-slider">
-                    <div id="project1">
-                        <a target="_blank" href="https://github.com/NickTheCodeKing/Interpolation-Search"><h2>Interpolation Search Analysis</h2></a>
-                        <img src="/Images/Interpolation_Search_PP_Screenshot.PNG" class="project-image">
+
+        <div id="calendar-grid" style="
+            display:grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap:0.5rem;
+            max-width:700px;
+            margin:0 auto;
+        "></div>
+    </div>
+
+    <!-- Quiz Section -->
+    <div id="quiz-section" style="display:none; min-height:100vh; text-align:center; padding:2rem; position:relative;">
+        <!-- Start button will go here -->
+        <div id="quiz-start-container" style="display:flex; justify-content:center; align-items:center; height:80vh;">
+            <button id="quiz-start-btn"
+                style="padding:1rem 2rem; font-size:1.5rem; border:none; border-radius:20px; background:#ee9ca7; color:white; cursor:pointer;">
+                Start Quiz
+            </button>
+        </div>
+    </div>
+
+    <!-- Soundtrack Section -->
+    <div id="soundtrack-section"
+        style="display:none; position:relative; width:100%; height:100vh; overflow:hidden; flex-direction:column; align-items:center;">
+        <!-- Title -->
+        <h1 style="margin-top:2rem; font-size:2rem; color:#333; text-align:center;">
+            Some of the Songs that Make Me Think of You
+        </h1>
+        <!-- Notes container -->
+        <div id="notes-container" style="position:relative; flex:1; width:100%;"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="close" onclick="closeModal()">close ✕</div>
+            <img id="modalImage" />
+            <h3 id="modalTitle"></h3>
+            <p id="modalText"></p>
+        </div>
+    </div>
+
+    <!-- Valentine Section -->
+    <div id="valentine-section"
+        style="display:none; min-height:100vh; text-align:center; justify-content:center; align-items:center; flex-direction:column;">
+        <h1 id="valentine-question">Will You Be My Valentine? ❤️</h1>
+        <button id="yes-btn"
+            style="padding:1rem 2rem; font-size:1.5rem; margin:1rem; border:none; border-radius:20px; background:#ee9ca7; color:white; cursor:pointer;">Yes!</button>
+        <button id="no-btn"
+            style="padding:1rem 2rem; font-size:1.5rem; margin:1rem; border:none; border-radius:20px; background:#ccc; color:white; cursor:pointer;">No</button>
+    </div>
+
+    <script>
+        // Cards
+        const cards = [
+            { title: "Hi ❤️", text: "I made something small for you.", button: "Open" },
+            { title: "So here’s the thing", text: "You make my days brighter just by existing.", button: "Next" },
+            { title: "I mean it", text: "Every laugh, every quiet moment, every memory.", button: "One more" },
+            { title: "Happy Valentine’s Day 💕", text: "Here is my official Valentine's Day proposal. Let me show you how much I love you.", button: "Our story" }
+        ];
+
+        const cardContainer = document.getElementById("card-container");
+        let cardIndex = 0;
+
+        function renderCard() {
+            const { title, text, button } = cards[cardIndex];
+            cardContainer.innerHTML = `
+        <div class="card">
+          <h1>${title}</h1>
+          <p>${text}</p>
+          <button onclick="nextCard()">${button}</button>
+        </div>
+      `;
+        }
+
+        function nextCard() {
+            cardIndex++;
+            if (cardIndex < cards.length) {
+                renderCard();
+            } else {
+                // Hide cards, show timeline
+                document.getElementById("cards-section").style.display = "none";
+                document.getElementById("menu-section").style.display = "block";
+            }
+        }
+
+        renderCard();
+
+        // Timeline
+        const moments = [
+            { date: "The Beginning", image: "images/Beginning.JPG", title: "The Start of Us", text: "Near the beginning of our relationship. Just like you always say, we raised eachother. We're completely different people than when we first started and somehow I still know you're my soulmate. Isn't it beautiful?" },
+            { date: "Birthday", image: "images/Birthday.JPG", title: "First Birthday", text: "This is not the first of your birthdays we celebrated together but it is the first to exists in my phone so here you go. You look so beautiful and majestic in this picture which makes sense since you look like an angel everyday. Love you." },
+            { date: "First Christmas Tree", image: "images/Christmas.JPG", title: "Our Very Own Christmas Tree", text: "Pretty sure this is the first time we've set up our very own Christmas tree in our very own house. Its nice but our current Christmas tree looks so much better. Can't wait until we set up one with our children for the first time." },
+            { date: "First Trip", image: "images/First_Trip.JPG", title: "Our Trip", text: "This was our first trip together. Only the beginning. There will be many more trips. This picture has buku aura btw. Thank you for being my ride or die." },
+            { date: "Attack on Titan", image: "images/AOT.JPG", title: "End of an Era", text: "It might be corny to include anime on this but this is genuinely one of my favorite things ever and I'm so glad I got to experience it with you. It awesome (and maybe even a little bad) that all of my favorite things include the memory of experiencing it with you. I may have started AoT without you but I finished it WITH you and I wouldn't want it any other way. Daisuki desu." },
+            { date: "Accomplished", image: "images/Accomplishments.JPEG", title: "A Boss", text: "I want you to truly understand how much of a boss you are. You endlessly show me how much of a Queen you are both inside and outside of our relationship. You always make me proud and I am happy to be called your fiance and be able to stand beside the GOAT." },
+            { date: "Graduation", image: "images/Graduation.JPG", title: "Graduation with You", text: "An intelligent black King and Queen. I'm so proud of your accomplishments but even more I'm proud that we accomplished it together." },
+            { date: "Proposal", image: "images/Proposal.JPG", title: "My Proposal to You", text: "This picture was just moments before I asked you if you would marry me. Our journey is special and that hard ass hike is like a metaphor for us. A hard way up, a gift and short respite, but then still more to go. I'm happy I'm going through life with you despite the ups and downs." },
+            { date: "Current", image: "images/Current.jpeg", title: "Us Right Now", text: "This is us not too many days ago. The two most important people in my life. I couldn't be happier. I love you so much Queen and I hope you know that. Through all the days we've spent together. Through all the years I've gotten to know you. We're still learning and my love is still growing. Thank you for choosing me." }
+        ];
+
+        const timeline = document.getElementById("timeline");
+
+        moments.forEach(m => {
+            const entry = document.createElement("div");
+            entry.className = "entry";
+            entry.innerHTML = `
+        <div class="date">${m.date}</div>
+        <img class="thumb" src="${m.image}" />
+      `;
+            entry.onclick = () => openModal(m);
+            timeline.appendChild(entry);
+        });
+
+        // Modal
+        function openModal(m) {
+            document.getElementById("modalImage").src = m.image;
+            document.getElementById("modalTitle").innerText = m.title;
+            document.getElementById("modalText").innerText = m.text;
+            document.getElementById("modal").classList.add("active");
+        }
+
+        function closeModal() {
+            document.getElementById("modal").classList.remove("active");
+        }
+
+        // Modules array for menu
+        const modules = [
+            { name: "Memories", action: () => showModule("timeline-section") },
+            { name: "Messages", action: () => showModule("messages-section") },
+            { name: "Calendar", action: () => showModule("calendar-section") },
+            { name: "Quiz", action: () => showModule("quiz-section") },
+            { name: "Soundtrack", action: () => showModule("soundtrack-section") },
+        ];
+
+        function showModule(sectionId) {
+            document.getElementById("menu-section").style.display = "none";
+            document.getElementById(sectionId).style.display = "block";
+        }
+
+        // Generate tiles dynamically
+        const tilesContainer = document.getElementById("tiles-container");
+        modules.forEach(m => {
+            const tile = document.createElement("div");
+            tile.style.width = "260px";
+            tile.style.height = "180px";
+            tile.style.background = "linear-gradient(135deg, #ffdde1, #ee9ca7)";
+            tile.style.borderRadius = "24px";
+            tile.style.display = "flex";
+            tile.style.alignItems = "center";
+            tile.style.justifyContent = "center";
+            tile.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)";
+            tile.style.cursor = "pointer";
+            tile.style.transition = "all 0.3s ease";
+            tile.style.fontWeight = "600";
+            tile.style.color = "#fff";
+            tile.style.fontSize = "1.3rem";
+            tile.style.textAlign = "center";
+            tile.style.flexDirection = "column";
+
+            // Optional cute emoji/icon per tile
+            let emoji = "";
+            if (m.name === "Memories") emoji = "📅";
+            if (m.name === "Messages") emoji = "💌";
+            if (m.name === "Calendar") emoji = "📅";
+            if (m.name === "Quiz") emoji = "❓";
+            if (m.name === "Soundtrack") emoji = "🎵";
+            tile.innerHTML = `<div style="font-size:1.5rem; margin-bottom:0.5rem">${emoji}</div>${m.name}`;
+
+            tile.onclick = m.action;
+            tile.onmouseover = () => {
+                tile.style.transform = "scale(1.15)";
+                tile.style.boxShadow = "0 16px 32px rgba(0,0,0,0.25)";
+            };
+            tile.onmouseout = () => {
+                tile.style.transform = "scale(1)";
+                tile.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)";
+            };
+
+            tile.classList.add("tile");
+            tilesContainer.appendChild(tile);
+        });
+
+        const timelineSection = document.getElementById("timeline-section");
+        // Only add once
+        if (!timelineSection.querySelector(".back-btn")) {
+            const backBtn = createBackButton();
+            backBtn.classList.add("back-btn");
+            // Insert at the top of the section
+            timelineSection.insertBefore(backBtn, timelineSection.firstChild);
+        }
+
+        const messagesSection = document.getElementById("messages-section");
+
+        // Only add once
+        if (!messagesSection.querySelector(".back-btn")) {
+            const backBtn = document.createElement("button");
+            backBtn.innerText = "← Back to Menu";
+            backBtn.classList.add("back-btn");
+            backBtn.style.padding = "0.75rem 1.5rem";
+            backBtn.style.margin = "1rem auto 2rem auto";
+            backBtn.style.display = "block";
+            backBtn.style.border = "none";
+            backBtn.style.borderRadius = "999px";
+            backBtn.style.background = "#ee9ca7";
+            backBtn.style.color = "#fff";
+            backBtn.style.fontSize = "1rem";
+            backBtn.style.cursor = "pointer";
+            backBtn.onclick = () => {
+                // Hide messages section
+                messagesSection.style.display = "none";
+
+                // Show main menu
+                document.getElementById("menu-section").style.display = "block";
+            };
+            messagesSection.insertBefore(backBtn, messagesSection.firstChild);
+        }
+
+        const calendarSection = document.getElementById("calendar-section");
+
+        // Only add the back button if it doesn’t already exist
+        if (!calendarSection.querySelector(".back-btn")) {
+            const backBtn = document.createElement("button");
+            backBtn.innerText = "← Back to Menu";
+            backBtn.classList.add("back-btn");
+
+            // Style it consistently with the other buttons
+            backBtn.style.padding = "0.75rem 1.5rem";
+            backBtn.style.margin = "1rem auto 2rem auto";
+            backBtn.style.display = "block";
+            backBtn.style.border = "none";
+            backBtn.style.borderRadius = "999px";
+            backBtn.style.background = "#ee9ca7";
+            backBtn.style.color = "#fff";
+            backBtn.style.fontSize = "1rem";
+            backBtn.style.cursor = "pointer";
+
+            backBtn.onclick = () => {
+                // Hide the calendar section
+                calendarSection.style.display = "none";
+
+                // Show the main menu
+                document.getElementById("menu-section").style.display = "block";
+            };
+
+            // Insert the back button at the top of the calendar section
+            calendarSection.insertBefore(backBtn, calendarSection.firstChild);
+        }
+
+        const quizSection = document.getElementById("quiz-section");
+
+        // Add back button like other sections
+        if (!quizSection.querySelector(".back-btn")) {
+            quizSection.insertBefore(createBackButton(), quizSection.firstChild);
+        }
+
+        const soundtrackSection = document.getElementById("soundtrack-section");
+
+        // Only add the back button if it doesn't already exist
+        if (!soundtrackSection.querySelector(".back-btn")) {
+            const backBtn = createBackButton();
+            backBtn.classList.add("back-btn");
+            soundtrackSection.insertBefore(backBtn, soundtrackSection.firstChild);
+
+            // Add logic to stop current note when clicked
+            backBtn.addEventListener("click", () => {
+                if (currentNoteAudio) {
+                    currentNoteAudio.pause();
+                    currentNoteAudio.currentTime = 0;
+                    currentNoteAudio = null;
+                }
+            });
+        }
+
+        // Add action to your quiz tile
+        modules.find(m => m.name === "Quiz").action = () => {
+            document.getElementById("menu-section").style.display = "none";
+            quizSection.style.display = "block";
+        };
+
+        modules.find(m => m.name === "Soundtrack").action = () => {
+            document.getElementById("menu-section").style.display = "none";
+            soundtrackSection.style.display = "flex";
+
+            // Pause background music when entering soundtrack
+            if (!bgMusic.paused) {
+                bgMusic.pause();
+            }
+        };
+
+        // Example: start button click
+        document.getElementById("quiz-start-btn").onclick = () => {
+            const container = document.getElementById("quiz-start-container");
+            container.innerHTML = `<p style="font-size:1.2rem; color:#333;">Quiz started! (Placeholder for questions)</p>`;
+        };
+
+        const moduleSections = ["timeline-section", "messages-section", "calendar-section", "quiz-section", "soundtrack-section", "valentine-section"];
+
+        function createBackButton() {
+            const btn = document.createElement("button");
+            btn.innerText = "← Back to Menu";
+            btn.style.padding = "0.75rem 1.5rem";
+            btn.style.margin = "2rem auto";
+            btn.style.display = "block";
+            btn.style.border = "none";
+            btn.style.borderRadius = "999px";
+            btn.style.background = "#ee9ca7";
+            btn.style.color = "#fff";
+            btn.style.fontSize = "1rem";
+            btn.style.cursor = "pointer";
+            btn.onclick = () => {
+                // Hide all modules
+                moduleSections.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.style.display = "none";
+                });
+
+                // Show menu hub
+                document.getElementById("menu-section").style.display = "block";
+            };
+            return btn;
+        }
+
+        const heartsContainer = document.getElementById("hearts");
+
+        heartsContainer.className = "hearts";
+
+        function spawnHeart() {
+            const heart = document.createElement("div");
+            heart.className = "heart";
+            heart.innerText = "❤️";
+
+            const size = Math.random() * 1 + 0.8;
+            const left = Math.random() * 100;
+            const duration = Math.random() * 10 + 14;
+
+            heart.style.left = `${left}%`;
+            heart.style.fontSize = `${size}rem`;
+            heart.style.animationDuration = `${duration}s`;
+
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        // Control density here
+        setInterval(spawnHeart, 900);
+
+        // Example message threads
+        const threads = [
+            {
+                title: "Talk to the Moon",
+                messages: [
+                    { sender: "me", text: "I have late night conversations with the moon," },
+                    { sender: "me", text: "it tells me about the sun," },
+                    { sender: "me", text: "I tell him about you" },
+                ]
+            },
+            {
+                title: "One Place",
+                messages: [
+                    { sender: "me", text: "They say people can only b in one place at a time." },
+                    { sender: "me", text: "But that's not true becuz ur in both my heart and my mind." },
+                ]
+            },
+            {
+                title: "Beauty of the Universe",
+                messages: [
+                    { sender: "me", text: "Others look up to the stars to see the beauty of the universe" },
+                    { sender: "me", text: "I just look at u." },
+                ]
+            },
+            {
+                title: "Worth It",
+                messages: [
+                    { sender: "me", text: "If you carried Medusa's curse..." },
+                    { sender: "me", text: "I would still stare into your eyes," },
+                    { sender: "me", text: "so my stone body can gaze at perfection for eternity." },
+                ]
+            },
+            {
+                title: "Computer Science Fiance",
+                messages: [
+                    { sender: "me", text: "Are you a double?" },
+                    { sender: "me", text: "Because the thought of you always floats inside my head." },
+                ]
+            },
+            {
+                title: "Multilingual",
+                messages: [
+                    { sender: "me", text: "If I learned," },
+                    { sender: "me", text: "every language on the planet..." },
+                    { sender: "me", text: "I would still not find enough words to describe your beauty" },
+                ]
+            }
+        ];
+
+        // Generate thread tiles
+        const threadsContainer = document.getElementById("message-threads-container");
+
+        threads.forEach(thread => {
+            const tile = document.createElement("div");
+            tile.style.width = "180px";
+            tile.style.height = "120px";
+            tile.style.background = "linear-gradient(135deg, #ff9a9e, #fad0c4)";
+            tile.style.borderRadius = "20px";
+            tile.style.display = "flex";
+            tile.style.alignItems = "center";
+            tile.style.justifyContent = "center";
+            tile.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)";
+            tile.style.cursor = "pointer";
+            tile.style.transition = "all 0.3s ease";
+            tile.style.fontWeight = "600";
+            tile.style.color = "#fff";
+            tile.style.fontSize = "1rem";
+            tile.style.textAlign = "center";
+            tile.style.flexDirection = "column";
+
+            tile.innerHTML = `<div style="font-size:1.5rem; margin-bottom:0.5rem">💬</div>${thread.title}`;
+
+            tile.onclick = () => openThread(thread);
+            tile.onmouseover = () => { tile.style.transform = "scale(1.08)"; tile.style.boxShadow = "0 12px 28px rgba(0,0,0,0.25)"; };
+            tile.onmouseout = () => { tile.style.transform = "scale(1)"; tile.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)"; };
+
+            threadsContainer.appendChild(tile);
+        });
+
+        // Open thread overlay
+        function openThread(thread) {
+            const overlay = document.getElementById("thread-overlay");
+            const content = document.getElementById("thread-content");
+            content.innerHTML = ""; // clear previous
+
+            thread.messages.forEach((msg, i) => {
+                const bubble = document.createElement("div");
+                bubble.style.alignSelf = msg.sender === "me" ? "flex-start" : "flex-end";
+                bubble.style.background = msg.sender === "me" ? "#ffe0e0" : "#f0f0f0";
+                bubble.style.padding = "0.5rem 1rem";
+                bubble.style.borderRadius = "16px";
+                bubble.style.maxWidth = "80%";
+                bubble.style.wordBreak = "break-word";
+                bubble.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+                bubble.style.opacity = 0;
+                bubble.style.transition = "opacity 0.4s ease";
+
+                // Add typing indicator
+                const typing = document.createElement("span");
+                typing.innerText = "…";
+                typing.style.opacity = 0.5;
+                bubble.appendChild(typing);
+
+                content.appendChild(bubble);
+
+                // Delay per bubble
+                setTimeout(() => {
+                    typing.remove();
+                    bubble.innerText = msg.text;
+                    bubble.style.opacity = 1;
+                }, 2000 * i); // 2000ms interval between bubbles
+            });
+
+            overlay.style.display = "block";
+        }
+
+        // Back button in thread overlay
+        document.getElementById("thread-back-btn").onclick = () => {
+            document.getElementById("thread-overlay").style.display = "none";
+        };
+
+        const input = document.querySelector("#thread-input input");
+        const sendBtn = document.querySelector("#thread-input button");
+
+        // Enable/disable send button based on input
+        input.addEventListener("input", () => {
+            if (input.value.trim() !== "") {
+                sendBtn.disabled = false;
+                sendBtn.style.background = "#ee9ca7";
+                sendBtn.style.cursor = "pointer";
+            } else {
+                sendBtn.disabled = true;
+                sendBtn.style.background = "#ccc";
+                sendBtn.style.cursor = "not-allowed";
+            }
+        });
+
+        // Create the "I LOVE YOU" overlay once
+        const loveOverlay = document.createElement("div");
+        loveOverlay.innerText = "I LOVE YOU TOO! ❤️";
+        loveOverlay.style.position = "fixed";
+        loveOverlay.style.top = "50%";
+        loveOverlay.style.left = "50%";
+        loveOverlay.style.transform = "translate(-50%, -50%) scale(0.8)";
+        loveOverlay.style.fontSize = "4rem";
+        loveOverlay.style.color = "#ff4d6d";
+        loveOverlay.style.textAlign = "center";
+        loveOverlay.style.zIndex = "20000";
+        loveOverlay.style.opacity = "0";
+        loveOverlay.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+        document.body.appendChild(loveOverlay);
+
+        // Send button click
+        sendBtn.addEventListener("click", () => {
+            const text = input.value.trim();
+            input.value = ""; // clear the input
+            sendBtn.style.background = "#ccc";
+            sendBtn.style.cursor = "not-allowed";
+
+            if (text.toLowerCase().includes("love")) {
+                // Reset overlay
+                loveOverlay.style.transition = "none";
+                loveOverlay.style.opacity = "0";
+                loveOverlay.style.transform = "translate(-50%, -50%) scale(0.5) rotate(-10deg)";
+
+                // Trigger reflow to restart animation
+                void loveOverlay.offsetWidth;
+
+                // Animate in with scale and rotation
+                loveOverlay.style.transition = "transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s ease";
+                loveOverlay.style.opacity = "1";
+                loveOverlay.style.transform = "translate(-50%, -50%) scale(1.2) rotate(10deg)";
+
+                // Bounce effect after a moment
+                setTimeout(() => {
+                    loveOverlay.style.transition = "transform 0.3s ease";
+                    loveOverlay.style.transform = "translate(-50%, -50%) scale(1) rotate(0deg)";
+                }, 500);
+
+                // Fade out after 2s
+                setTimeout(() => {
+                    loveOverlay.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+                    loveOverlay.style.opacity = "0";
+                    loveOverlay.style.transform = "translate(-50%, -50%) scale(0.5) rotate(-10deg)";
+                }, 2000);
+            }
+        });
+
+        const bgMusic = document.getElementById("bg-music");
+        bgMusic.volume = 0.5; // optional
+
+        // Attempt to play immediately
+        bgMusic.play().catch(() => {
+            // If autoplay is blocked, wait for first interaction
+            const startMusic = () => {
+                bgMusic.play();
+                document.removeEventListener("click", startMusic);
+            };
+            document.addEventListener("click", startMusic);
+        });
+
+        // Update the toggle button text dynamically
+        const musicToggle = document.getElementById("music-toggle");
+
+        function updateMusicButton() {
+            musicToggle.innerText = bgMusic.paused ? "Resume Music" : "Pause Music";
+        }
+
+        // Initial button text
+        updateMusicButton();
+
+        musicToggle.onclick = () => {
+            if (bgMusic.paused) {
+                bgMusic.play();
+            } else {
+                bgMusic.pause();
+            }
+            updateMusicButton();
+        };
+
+        // Optional: update button if music ends or is paused via other means
+        bgMusic.onplay = updateMusicButton;
+        bgMusic.onpause = updateMusicButton;
+
+        // Add the FINISH button to menu section
+        const finishBtn = document.createElement("button");
+        finishBtn.innerText = "FINISH";
+        finishBtn.style.position = "fixed";
+        finishBtn.style.bottom = "2rem";
+        finishBtn.style.right = "2rem";
+        finishBtn.style.padding = "1rem 2rem";
+        finishBtn.style.fontSize = "1.5rem";
+        finishBtn.style.border = "none";
+        finishBtn.style.borderRadius = "20px";
+        finishBtn.style.background = "#ff4d6d";
+        finishBtn.style.color = "white";
+        finishBtn.style.cursor = "pointer";
+        finishBtn.style.zIndex = "1000";
+
+        document.getElementById("menu-section").appendChild(finishBtn);
+
+        finishBtn.onclick = () => {
+            // Hide menu
+            document.getElementById("menu-section").style.display = "none";
+
+            // Show Valentine section
+            document.getElementById("valentine-section").style.display = "flex";
+        };
+
+        // Heart creator (upgraded)
+        function createHeart(x, y, size, duration) {
+            const heart = document.createElement("div");
+            heart.innerText = "❤️";
+            heart.style.position = "fixed";
+            heart.style.left = x + "px";
+            heart.style.top = y + "px";
+            heart.style.fontSize = size + "rem";
+            heart.style.pointerEvents = "none";
+            heart.style.zIndex = 3000;
+            heart.style.opacity = 1;
+            document.body.appendChild(heart);
+
+            const dx = (Math.random() - 0.5) * 500;     // wider explosion
+            const dy = -Math.random() * 500 - 200;     // float up
+            const rotation = (Math.random() - 0.5) * 720;
+            const animDuration = duration || 4000 + Math.random() * 2000; // 4–6s
+
+            heart.animate([
+                { transform: "translate(0,0) rotate(0deg) scale(1)", opacity: 1 },
+                { transform: `translate(${dx}px, ${dy}px) rotate(${rotation}deg) scale(1.8)`, opacity: 0 }
+            ], {
+                duration: animDuration,
+                easing: "cubic-bezier(.17,.67,.83,.67)"
+            });
+
+            setTimeout(() => heart.remove(), animDuration);
+        }
+
+
+        // YES BUTTON
+        document.getElementById("yes-btn").onclick = () => {
+
+            const section = document.getElementById("valentine-section");
+            const question = document.getElementById("valentine-question");
+
+            // Change question text instead of hiding it
+            if (question) {
+                question.innerText = "You Are My Valentine ❤️";
+                question.style.transition = "all 0.6s ease";
+                question.style.transform = "scale(1.2)";
+                question.style.color = "#ff4d6d";
+                question.style.animation = "pulseForever 2s ease-in-out infinite";
+            }
+
+            // Hide buttons
+            document.getElementById("yes-btn").style.display = "none";
+            document.getElementById("no-btn").style.display = "none";
+
+            const rect = section.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Longer explosion burst (6 seconds)
+            const burstInterval = setInterval(() => {
+                for (let i = 0; i < 10; i++) {
+                    createHeart(
+                        centerX + (Math.random() - 0.5) * 300,
+                        centerY + (Math.random() - 0.5) * 200,
+                        Math.random() * 1.4 + 0.8
+                    );
+                }
+            }, 120);
+
+            setTimeout(() => clearInterval(burstInterval), 6000);
+
+            // Big center message
+            const msg = document.createElement("div");
+            msg.innerText = "❤️ I LOVE YOU ❤️";
+            msg.style.position = "fixed";
+            msg.style.top = "50%";
+            msg.style.left = "50%";
+            msg.style.transform = "translate(-50%, -50%) scale(0.5)";
+            msg.style.fontSize = "5rem";
+            msg.style.color = "#ff4d6d";
+            msg.style.opacity = "0";
+            msg.style.textAlign = "center";
+            msg.style.zIndex = 4000;
+            msg.style.fontWeight = "bold";
+            msg.style.textShadow = "0 0 40px rgba(255,77,109,0.8)";
+            document.body.appendChild(msg);
+
+            msg.animate([
+                { transform: "translate(-50%, -50%) scale(0.5)", opacity: 0 },
+                { transform: "translate(-50%, -50%) scale(1.5)", opacity: 1 },
+                { transform: "translate(-50%, -50%) scale(1)", opacity: 1 }
+            ], {
+                duration: 1800,
+                easing: "ease-out"
+            });
+
+            setTimeout(() => msg.remove(), 7000);
+
+            // Subtle background pulse
+            section.animate([
+                { backgroundColor: "#fff" },
+                { backgroundColor: "#ffe6ec" },
+                { backgroundColor: "#fff" }
+            ], {
+                duration: 2000,
+                iterations: 3
+            });
+
+            // Add GIF on the right side
+            const gif = document.createElement("img");
+            gif.src = "images/BUST.gif";
+            gif.style.position = "fixed";
+            gif.style.right = "5%";
+            gif.style.top = "50%";
+            gif.style.transform = "translateY(-50%)";
+            gif.style.width = "250px";
+            gif.style.zIndex = "1500";
+            gif.style.opacity = "0";
+            gif.style.transition = "opacity 1s ease";
+
+            document.body.appendChild(gif);
+
+            // Fade in
+            setTimeout(() => {
+                gif.style.opacity = "1";
+            }, 100);
+
+            // Remove after 10 seconds
+            setTimeout(() => {
+                gif.style.opacity = "0";
+                setTimeout(() => gif.remove(), 1000);
+            }, 10000);
+        };
+
+
+        // NO BUTTON
+        let noClickCount = 0; // track how many times No has been clicked
+
+        document.getElementById("no-btn").onclick = (e) => {
+            noClickCount++;
+
+            const noBtn = e.target;
+
+            if (noClickCount <= 2) {
+                // Move the button to a random position within the viewport
+                const padding = 20; // to prevent it from going off screen
+                const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+                const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+                const randomX = Math.random() * maxX;
+                const randomY = Math.random() * maxY;
+
+                noBtn.style.position = "absolute";
+                noBtn.style.left = `${randomX}px`;
+                noBtn.style.top = `${randomY}px`;
+                noBtn.style.transition = "all 0.5s ease"; // smooth movement
+            } else {
+                // On third click, show the input box modal
+                noClickCount = 0; // reset counter in case she goes back to Valentine section
+                showNoModal(); // call the function that creates the overlay & Yes-input box
+            }
+        };
+
+        // Extracted modal creation into a function for clarity
+        function showNoModal() {
+            // Create overlay
+            const overlay = document.createElement("div");
+            overlay.style.position = "fixed";
+            overlay.style.top = "0";
+            overlay.style.left = "0";
+            overlay.style.width = "100%";
+            overlay.style.height = "100%";
+            overlay.style.backgroundColor = "rgba(0,0,0,0.5)";
+            overlay.style.display = "flex";
+            overlay.style.justifyContent = "center";
+            overlay.style.alignItems = "center";
+            overlay.style.zIndex = "5000";
+
+            // Create box
+            const box = document.createElement("div");
+            box.style.backgroundColor = "#fff0f6";
+            box.style.padding = "2rem";
+            box.style.borderRadius = "20px";
+            box.style.textAlign = "center";
+            box.style.width = "320px";
+            box.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
+            box.style.fontFamily = "'Comic Sans MS', sans-serif";
+
+            const message = document.createElement("p");
+            message.innerText = "Oops. Looks like you accidentally pressed the wrong thing. No worries! Just type Yes or No into this box.";
+            message.style.marginBottom = "1.5rem";
+            message.style.fontSize = "0.95rem";
+            message.style.color = "#333";
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = "Type here...";
+            input.style.padding = "0.8rem 1rem";
+            input.style.fontSize = "1.1rem";
+            input.style.width = "100%";
+            input.style.marginBottom = "1rem";
+            input.style.textAlign = "center";
+            input.style.borderRadius = "12px";
+            input.style.border = "2px solid #ff99aa";
+            input.style.outline = "none";
+            input.style.boxShadow = "inset 0 2px 5px rgba(0,0,0,0.05)";
+            input.style.transition = "all 0.3s ease";
+
+            input.addEventListener("focus", () => {
+                input.style.borderColor = "#ee9ca7";
+                input.style.boxShadow = "0 0 10px rgba(238,156,167,0.5)";
+            });
+            input.addEventListener("blur", () => {
+                input.style.borderColor = "#ff99aa";
+                input.style.boxShadow = "inset 0 2px 5px rgba(0,0,0,0.05)";
+            });
+
+            const submitBtn = document.createElement("button");
+            submitBtn.innerText = "Submit";
+            submitBtn.style.padding = "0.6rem 1.5rem";
+            submitBtn.style.fontSize = "1rem";
+            submitBtn.style.border = "none";
+            submitBtn.style.borderRadius = "12px";
+            submitBtn.style.background = "#ccc";
+            submitBtn.style.color = "#fff";
+            submitBtn.style.cursor = "not-allowed";
+            submitBtn.style.transition = "all 0.3s ease";
+
+            const target = "Yes";
+            let typed = "";
+
+            input.addEventListener("keydown", (e) => {
+                e.preventDefault();
+
+                if (e.key === "Backspace") {
+                    typed = typed.slice(0, -1);
+                } else if (typed.length < target.length) {
+                    typed += target[typed.length];
+                }
+
+                input.value = typed;
+
+                if (typed === target) {
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = "#ee9ca7";
+                    submitBtn.style.cursor = "pointer";
+                    submitBtn.style.boxShadow = "0 5px 15px rgba(238,156,167,0.6)";
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.style.background = "#ccc";
+                    submitBtn.style.cursor = "not-allowed";
+                    submitBtn.style.boxShadow = "none";
+                }
+            });
+
+            submitBtn.onclick = () => {
+                overlay.remove();
+                document.getElementById("yes-btn").click();
+            };
+
+            box.appendChild(message);
+            box.appendChild(input);
+            box.appendChild(submitBtn);
+            overlay.appendChild(box);
+            document.body.appendChild(overlay);
+
+            input.focus();
+        }
+
+        const goldenDays = {
+            "2017-12-22": {
+                title: "Anniversary",
+                description: "This is our anniversary date. The day you said yes. (or did you?) Every year I'm reminded how blessed I am."
+            },
+            "2026-02-11": {
+                title: "Today?",
+                description: "The day I asked you to be my Valentine this year. (I have to ask you every year for some reason)."
+            },
+            "2025-07-29": {
+                title: "Proposal Anniversary",
+                description: "The day of my proposal to you. Glad you said yes or this would be a sad day."
+            },
+            "2001-10-02": {
+                title: "Your Birthday",
+                description: "Your birthday. I'm so glad your mom gave birth to you."
+            },
+            "2001-12-04": {
+                title: "My Birthday",
+                description: "I'm glad to be a Sagiterrorist. Also glad every year I get the best b-day gift. Can you guess what it is?"
+            },
+            "2025-09-28": {
+                title: "First Cruise",
+                description: "The day we went on our first cruise together - and thankfully alone."
+            },
+            "2025-05-09": {
+                title: "Graduation!",
+                description: "The day we graduated together! University of New Orleans alums"
+            },
+            "2025-06-06": {
+                title: "Baptism",
+                description: "The day we got baptised. I think..."
+            },
+            "2026-06-06": {
+                title: "Marriage!",
+                description: "This the day we're going to get married! I think..."
+            },
+            "2020-05-09": {
+                title: "Graduated Highschool",
+                description: "Approximately..."
+            }
+        };
+
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        function renderCalendar() {
+            const grid = document.getElementById("calendar-grid");
+            const title = document.getElementById("calendar-title");
+            grid.innerHTML = "";
+
+            document.getElementById("calendar-month").innerText = monthNames[currentMonth] + " ";
+            document.getElementById("calendar-year").innerText = currentYear;
+
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+            // Empty cells before start
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement("div");
+                grid.appendChild(empty);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement("div");
+                cell.innerText = day;
+                cell.style.padding = "1rem";
+                cell.style.borderRadius = "12px";
+                cell.style.cursor = "pointer";
+                cell.style.background = "#fff";
+                cell.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
+                cell.style.transition = "all 0.2s ease";
+
+                const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+                if (goldenDays[dateKey]) {
+                    cell.style.background = "gold";
+                    cell.style.fontWeight = "600";
+                    cell.style.boxShadow = "0 6px 14px rgba(255,215,0,0.5)";
+
+                    cell.onclick = () => {
+                        showGoldenDay(goldenDays[dateKey]);
+                    };
+                }
+
+                cell.onmouseover = () => cell.style.transform = "scale(1.1)";
+                cell.onmouseout = () => cell.style.transform = "scale(1)";
+
+                grid.appendChild(cell);
+            }
+        }
+
+        document.getElementById("prev-month").onclick = () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        };
+
+        document.getElementById("next-month").onclick = () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar();
+        };
+
+        function showGoldenDay(data) {
+            const overlay = document.createElement("div");
+            overlay.style.position = "fixed";
+            overlay.style.inset = "0";
+            overlay.style.background = "rgba(0,0,0,0.5)";
+            overlay.style.display = "flex";
+            overlay.style.alignItems = "center";
+            overlay.style.justifyContent = "center";
+            overlay.style.zIndex = "20000";
+
+            const box = document.createElement("div");
+            box.style.background = "#fff";
+            box.style.padding = "2rem";
+            box.style.borderRadius = "20px";
+            box.style.maxWidth = "400px";
+            box.style.textAlign = "center";
+            box.style.animation = "fadeIn 0.3s ease";
+
+            box.innerHTML = `
+                <h2>${data.title}</h2>
+                <p>${data.description}</p>
+                <button style="margin-top:1rem;">Close</button>
+            `;
+
+            box.querySelector("button").onclick = () => overlay.remove();
+            overlay.onclick = () => overlay.remove();
+
+            overlay.appendChild(box);
+            document.body.appendChild(overlay);
+        }
+
+        function showYearSelector() {
+            const existing = document.getElementById("year-dropdown");
+            if (existing) existing.remove();
+
+            const dropdown = document.createElement("div");
+            dropdown.id = "year-dropdown";
+            dropdown.style.position = "absolute";
+            dropdown.style.background = "#fff";
+            dropdown.style.boxShadow = "0 6px 18px rgba(0,0,0,0.2)";
+            dropdown.style.borderRadius = "12px";
+            dropdown.style.padding = "0.5rem";
+            dropdown.style.maxHeight = "300px";
+            dropdown.style.overflowY = "auto";
+            dropdown.style.zIndex = "10000";
+
+            const rect = document.getElementById("calendar-year").getBoundingClientRect();
+            dropdown.style.left = rect.left + "px";
+            dropdown.style.top = rect.bottom + window.scrollY + "px";
+
+            const startYear = 2020;
+            const endYear = 2035;
+
+            for (let y = startYear; y <= endYear; y++) {
+                const option = document.createElement("div");
+                option.innerText = y;
+                option.style.padding = "0.5rem 1rem";
+                option.style.cursor = "pointer";
+
+                option.onmouseover = () => option.style.background = "#f0f0f0";
+                option.onmouseout = () => option.style.background = "transparent";
+
+                option.onclick = () => {
+                    currentYear = y;
+                    renderCalendar();
+                    dropdown.remove();
+                };
+
+                dropdown.appendChild(option);
+            }
+
+            document.body.appendChild(dropdown);
+
+            document.addEventListener("click", function closeDropdown(e) {
+                if (!dropdown.contains(e.target) && e.target.id !== "calendar-year") {
+                    dropdown.remove();
+                    document.removeEventListener("click", closeDropdown);
+                }
+            });
+        }
+
+        document.getElementById("calendar-year").onclick = showYearSelector;
+
+        renderCalendar();
+
+        const quizQuestions = [
+            {
+                question: "Where did we go on our first trip alone together?",
+                options: ["Texas", "Florida", "Mississippi", "Tennesse"],
+                answer: 0 // index of correct option
+            },
+            {
+                question: "What was the theme of our first Christmas tree?",
+                options: ["Classic", "Anime", "Pink", "Black & White"],
+                answer: 2
+            },
+            {
+                question: "Which anime did we watch together that became special to us? (And my favorite)",
+                options: ["Death Note", "Attack on Titan", "Astra Lost in Space", "My Hero Academia"],
+                answer: 1
+            },
+            {
+                question: "What year did I propose to you?",
+                options: ["2020", "2025", "2022", "2023"],
+                answer: 1
+            },
+            {
+                question: "Who's the most gorgeous woman in the world?",
+                options: ["Malia' Marie Bartholomew", "Beyonce", "Megan Fox", "Zendaya Coleman"],
+                answer: 0
+            },
+            {
+                question: "Who's the sexiest man in the world?",
+                options: ["Nicholas Jonathan Dobard Jr.", "Michael B Jordan", "Chris Evans", "Idris Elba"],
+                answer: 0
+            },
+            {
+                question: "What's my favorite color?",
+                options: ["Blue", "Black", "Green", "Red"],
+                answer: 3
+            },
+            {
+                question: "What's my favorite video game?",
+                options: ["Marvel Rivals", "Hollow Knight", "Sekiro", "GTA V"],
+                answer: 1
+            },
+            {
+                question: "Do you love me?",
+                options: ["Yes", "No"],
+                answer: 0
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+
+        // Function to render a question
+        function renderQuestion() {
+            const container = document.getElementById("quiz-start-container");
+            container.innerHTML = ""; // clear previous content
+
+            if (currentQuestionIndex >= quizQuestions.length) {
+                let emoji = "😞"; // default sad
+                const scorePercent = (correctAnswers / quizQuestions.length) * 100;
+
+                if (scorePercent > 50 && scorePercent < 100) emoji = "😊";
+                if (scorePercent === 100) emoji = "🎉✨"; // extra celebration
+
+                container.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:80vh; gap:2rem;">
+                        <h2 id="quiz-score" style="color:#333; text-align:center; font-size:2rem;">
+                            You scored ${correctAnswers}/${quizQuestions.length}! ${emoji}
+                        </h2>
+                        <button onclick="restartQuiz()" style="padding:1rem 2rem; font-size:1.2rem; border:none; border-radius:20px; background:#ee9ca7; color:white; cursor:pointer;">
+                            Restart Quiz
+                        </button>
                     </div>
-    
-                    <!-- <div id="project2">
-                        <img src="/Images/PlaceHolder.png" class="project-image">
-                    </div> -->
-    
-                    <!-- <div id="project3">
-                        <img src="/Images/PlaceHolder.png" class="project-image">
-                    </div> -->
-                </div>
-            </div>
-        </div>
-        
-        <div class="wrapper" id="contact-wrapper">
-            <div class="contact animate" id="contact">
-                <h1>Contact Me</h1>
-                <div class="contact-form">
-                    <p>nicholasdobard@gmail.com</p>
-                    <p class="linkedin"><a target="_blank" href="https://www.linkedin.com/in/nicholas-dobard-ab93b124b/">LinkedIn</a></p>
-                    <form name="contact-me" id="contact-form" method="POST" action="https://script.google.com/macros/s/AKfycbzdjwqutkIZ5QpeIM6JrHHH19_CLEbJBkYgJ1dKr4eNOBIBSAzCtzyjX-JtgsGbfuw4/exec">
-                        <input name="Name" type="text" id="name" placeholder="Name" required>
-                        <input name="Email" type="email" id="email" placeholder="Email" required>
-                        <textarea name="Message" rows="6" placeholder="Message"></textarea>
-                        <div class="button">
-                            <div class="lds-ring hide" id="lds-ring"><div></div><div></div><div></div><div></div></div>
-                            <button type="submit" class="btn" id="submit-button">Submit</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="contact-form-success">
-                    <span class="animate" id="success-msg"></span>
-                </div>
-            </div>
-        </div>
-        
-        <div id="footer-wrapper">
-            <div class="footer">
-                <div class="copyright">
-                    <p>Copyright 2023 © Nicholas Dobard</p>
-                </div>
-            </div>
-        </div>
-        
-    </div>
+                `;
 
-    
+                // Extra animation if perfect score
+                if (scorePercent === 100) {
+                    const scoreEl = document.getElementById("quiz-score");
+                    scoreEl.animate([
+                        { transform: "scale(0.5)", opacity: 0 },
+                        { transform: "scale(1.2)", opacity: 1 },
+                        { transform: "scale(1)", opacity: 1 }
+                    ], {
+                        duration: 1500,
+                        easing: "ease-out"
+                    });
+                }
+
+                return;
+            }
+
+            const q = quizQuestions[currentQuestionIndex];
+
+            const quizWrapper = document.createElement("div");
+            quizWrapper.style.display = "flex";
+            quizWrapper.style.flexDirection = "column";
+            quizWrapper.style.alignItems = "center";
+            quizWrapper.style.gap = "2rem";
+            container.appendChild(quizWrapper);
+
+            // Question
+            const questionEl = document.createElement("h2");
+            questionEl.innerText = q.question;
+            questionEl.style.color = "#333";
+            questionEl.style.textAlign = "center";
+            quizWrapper.appendChild(questionEl);
+
+            // Answers grid
+            const answersContainer = document.createElement("div");
+            answersContainer.style.display = "grid";
+            answersContainer.style.gridTemplateColumns = "1fr 1fr";
+            answersContainer.style.gap = "1rem";
+            answersContainer.style.justifyItems = "center";
+            quizWrapper.appendChild(answersContainer);
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement("button");
+                btn.innerText = opt;
+                btn.style.padding = "0.75rem 1.5rem";
+                btn.style.fontSize = "1rem";
+                btn.style.border = "none";
+                btn.style.borderRadius = "16px";
+                btn.style.background = "#ee9ca7";
+                btn.style.color = "white";
+                btn.style.cursor = "pointer";
+                btn.style.width = "120px";
+                btn.style.transition = "background 0.3s";
+
+                btn.onclick = () => {
+                    // Flash green or red
+                    if (idx === q.answer) {
+                        btn.style.background = "green";
+                        correctAnswers++;
+                    } else {
+                        btn.style.background = "red";
+                        // Also flash the correct answer green
+                        answersContainer.children[q.answer].style.background = "green";
+                    }
+
+                    // Wait a moment before going to next question
+                    setTimeout(() => {
+                        currentQuestionIndex++;
+                        renderQuestion();
+                    }, 500);
+                };
+
+                answersContainer.appendChild(btn);
+            });
+        }
+
+        // Start button override
+        document.getElementById("quiz-start-btn").onclick = () => {
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            renderQuestion();
+        };
+
+        // Optional restart function
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            renderQuestion();
+        }
+
+        // Make the section style consistent with the other sections
+        soundtrackSection.style.display = "none";
+        soundtrackSection.style.flexDirection = "column";
+        soundtrackSection.style.alignItems = "center";
+        soundtrackSection.style.padding = "1rem";
+        soundtrackSection.style.width = "100%";
+        soundtrackSection.style.minHeight = "100vh";
+        soundtrackSection.style.boxSizing = "border-box";
+        soundtrackSection.style.color = "#333";
+
+        // Title
+        let title = soundtrackSection.querySelector("h1");
+        if (!title) {
+            title = document.createElement("h1");
+            title.innerText = "All the Songs that Make Me Think of You";
+            title.style.fontSize = "2rem";
+            title.style.textAlign = "center";
+            title.style.margin = "2rem 0 1rem 0";
+            soundtrackSection.appendChild(title);
+        }
+
+        // Notes container
+        let notesContainer = soundtrackSection.querySelector("#notes-container");
+        if (!notesContainer) {
+            notesContainer = document.createElement("div");
+            notesContainer.id = "notes-container";
+            notesContainer.style.position = "relative";
+            notesContainer.style.flex = "1";
+            notesContainer.style.width = "100%";
+            soundtrackSection.appendChild(notesContainer);
+        }
+
+        // Example: Add floating notes
+        const songs = [
+            { title: "Beyonce Greatest Hits", url: "audio/Beyonce_Greatest.mp3" },
+            { title: "World Caves In", url: "audio/World_Caves_In.mp3" },
+            { title: "Denial Is a River", url: "audio/Denial_Is_A_River.mp3" },
+            { title: "Feel It", url: "audio/Feel_It.mp3" },
+            { title: "Chasing Cars", url: "audio/Chasing_Cars.mp3" },
+            { title: "Line Without a Hook", url: "audio/Line_Without_A_Hook.mp3" },
+            { title: "Somewhere Only We Know", url: "audio/Somewhere_Only_We_Know.mp3" },
+            { title: "World Caves In", url: "audio/World_Caves_In.mp3" },
+            { title: "Notion", url: "audio/Notion.mp3" },
+            { title: "A Thousand Years", url: "audio/A_Thousand_Years.mp3" },
+            { title: "Love Is An Open Door", url: "audio/Love_Is_An_Open_Door.mp3" },
+            { title: "Espresso", url: "audio/Espresso.mp3" },
+            { title: "Therapy", url: "audio/Therapy.mp3" },
+            { title: "Beneath The Mask", url: "audio/Beneath_The_Mask.mp3" },
+        ];
+
+        let currentNoteAudio = null; // tracks the currently playing note
+
+        function createNote(song) {
+            const note = document.createElement("div");
+            note.style.position = "absolute";
+            note.style.cursor = "pointer";
+            note.style.userSelect = "none";
+
+            // Initial random position
+            let x = Math.random() * (window.innerWidth - 50);
+            let y = Math.random() * (window.innerHeight - 200);
+            note.style.left = `${x}px`;
+            note.style.top = `${y}px`;
+
+            // Random size
+            note.style.fontSize = `${Math.random() * 2 + 2}rem`; // 2–4rem
+
+            // Wrap emoji in a span so color works
+            const emoji = document.createElement("span");
+            emoji.innerText = "🎵";
+            emoji.style.color = "#333"; // default color
+            note.appendChild(emoji);
+
+            // Movement
+            const speed = Math.random() * 0.5 + 0.2;
+            let dx = (Math.random() - 0.5) * speed * 2;
+            let dy = (Math.random() - 0.5) * speed * 2;
+
+            function moveNote() {
+                x += dx;
+                y += dy;
+                if (x < 0 || x > window.innerWidth - 50) dx = -dx;
+                if (y < 0 || y > window.innerHeight - 100) dy = -dy;
+                note.style.left = `${x}px`;
+                note.style.top = `${y}px`;
+                requestAnimationFrame(moveNote);
+            }
+            requestAnimationFrame(moveNote);
+
+            // Click behavior
+            note.addEventListener("click", () => {
+                console.log(`Clicked note: ${song.title}`);
+
+                if (currentNoteAudio) {
+                    currentNoteAudio.pause();
+                    currentNoteAudio.currentTime = 0;
+                }
+                const audio = new Audio(song.url);
+                currentNoteAudio = audio;
+                audio.play();
+
+                // Turn this note green
+                emoji.style.color = "green";
+            });
+
+            notesContainer.appendChild(note);
+        }
+
+        function stopCurrentNote() {
+            if (currentNoteAudio) {
+                currentNoteAudio.pause();
+                currentNoteAudio.currentTime = 0;
+                currentNoteAudio = null;
+            }
+        }
+
+        songs.forEach(song => createNote(song));
+    </script>
 </body>
-<script type="text/javascript" src="portfolio.js"></script>
+
 </html>
